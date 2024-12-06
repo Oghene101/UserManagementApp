@@ -10,5 +10,5 @@ public record UserVm(
     string FirstName,
     string LastName,
     string Email,
-    IEnumerable<string> Roles,
-    string PhotoUrl);
+    string PhotoUrl,
+    IEnumerable<string>? Roles = null);

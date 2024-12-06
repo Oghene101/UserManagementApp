@@ -29,3 +29,176 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+/** My styles*/
+
+.my_card_panel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.my_card {
+    border-radius: 16px;
+    width: 330px;
+    margin: 20px;
+    box-sizing: border-box;
+    background: white;
+    overflow: hidden;
+}
+
+.my_card_desc {
+    padding: 20px;
+}
+
+.my_card_image_box {
+    width: 100%;
+    overflow: hidden;
+}
+
+.my_card_image_box img {
+    width: 100%;
+}
+
+
+.drawer-panel, .side-drawer, .drawer-content-area {
+    box-sizing: border-box;
+}
+
+.side-drawer, .drawer-content-area {
+    padding: 20px
+}
+
+.drawer-panel {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+.side-drawer {
+    position: absolute;
+    width: 250px;
+    height: 100vh;
+    background: #cccccc;
+
+}
+
+.drawer-content-area-inner {
+    margin-left: 260px;
+}
+
+
+.auth-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-panel-inner {
+    width: 400px;
+    min-width: 300px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-top: 10%;
+}
+
+.auth-panel-inner form p input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid #dddddd;
+}
+
+.auth-panel-inner form button {
+    width: 100%;
+}
+
+.flex-btw {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#nav-div {
+    position: relative;
+}
+
+.pull-to-right {
+    position: absolute;
+    right: 20px;
+}
+
+.congrat-box {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.display-table {
+    width: 100%;
+}
+
+.display-table thead {
+    background: #555555;
+    color: white;
+    padding: 10px;
+}
+
+.display-table thead th {
+    padding: 10px;
+}
+
+.display-table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid grey;
+}
+
+.access-denied-img {
+    width: 400px;
+    min-width: 300px;
+    margin: 10% auto;
+    overflow: hidden;
+}
+
+.access-denied-img img {
+    width: 100%;
+}
+
+.Error404 {
+    font-family: Tahoma;
+    color: #bbbbbb;
+    font-weight: bold;
+    font-size: 200px;
+    text-shadow: 4px 4px 4px #555555;
+}
+
+.detail-box {
+    display: flex;
+    min-height: 200px;
+    align-items: center;
+}
+
+.detail-box .left-box, .detail-box .right-box {
+    border: 1px solid #aaaaaa;
+    background: #dddddd;
+    padding: 20px;
+    margin-top: 40px;
+    margin-right: 40px;
+    min-height: 200px;
+    width: 45%;
+}
+
+.hide {
+    display: none;
+}
+
+show {
+    display: block;
+}

@@ -51,7 +51,7 @@ public class AccountService(
         return urlService.GenerateUrl("Index", "Home");
     }
 
-    public async Task<Result<string>> LoginAsync(LoginVm loginVm, string returnUrl)
+    public async Task<Result<string>> LoginAsync(LoginVm loginVm, string? returnUrl)
     {
         var user = await userManager.FindByEmailAsync(loginVm.Email);
         if (user == null)

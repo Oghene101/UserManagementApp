@@ -1,0 +1,11 @@
+﻿@{
+    string name = string.IsNullOrEmpty(ViewBag.Name) ? "User" : ViewBag.Name;
+}
+
+<div class="congrat-box">
+    <h1>Congratulations @name </h1>
+    <p>
+        An account confirmation link should be sent to you already via the email you provided us on registration,
+        if the email is correct and still accessible to you.
+    </p>
+</div>

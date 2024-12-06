@@ -1,8 +1,32 @@
-﻿@{
+﻿@model IEnumerable<UserManagementApp.Models.ViewModels.UserVm>
+@{
     ViewData["Title"] = "Home Page";
+    ViewBag.IsLoggedOut = true;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<Partial name="_NavbarPartial" />*@
+
+<div class="container">
+    <main role="main" class="pb-3">
+        <div class="my_card_panel">
+            @foreach (var user in Model)
+            {
+                <a href="#">
+                    <div class="my_card">
+                        <div class="my_card_image_box">
+                            <img src="@user.PhotoUrl"/>
+                        </div>
+                        <div class="my_card_desc">
+                            <p>
+                                @user.FirstName @user.LastName
+                            </p>
+                            <p>
+                                @user.Email
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </main>
 </div>
