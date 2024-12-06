@@ -1,5 +1,9 @@
-﻿namespace UserManagementApp.Data;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using UserManagementApp.Models.Entities;
 
-public class AppDbContext
+namespace UserManagementApp.Data;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
 }
