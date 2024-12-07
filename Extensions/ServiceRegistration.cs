@@ -30,6 +30,7 @@ public static class ServiceRegistration
         // services.AddScoped<IUnitOfWork, UnitOfWork>();
         // services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IUrlService, UrlService>();
         services.AddScoped<IEmailService, EmailService>();
         // services.AddScoped<IUserContactService, UserContactService>();

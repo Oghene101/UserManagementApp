@@ -37,7 +37,12 @@ public class ExceptionMiddleware(
         HttpStatusCode statusCode)
     {
         logger.LogError(ex, ex.Message);
-        Console.WriteLine($"Error => {ex}, {ex.Message}");
+        Console.WriteLine("//////////////////////////////////////////////////////////");
+        Console.WriteLine("//////////////////////////////////////////////////////////");
+        Console.WriteLine($"TimeStamp: {DateTime.Now} \n ErrorMessage: {ex.Message}" +
+                          $"\n StackTrace: {ex.StackTrace}");
+        Console.WriteLine("//////////////////////////////////////////////////////////");
+        Console.WriteLine("//////////////////////////////////////////////////////////");
 
         var responseDto = ResponseDto.Failure(new[] { new Error("Server.Error", errorMessage) }, statusCode);
 

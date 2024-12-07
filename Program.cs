@@ -1,5 +1,6 @@
 using UserManagementApp.Extensions;
 using UserManagementApp.Middlewares;
+using UserManagementApp.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,5 +32,6 @@ app.MapControllerRoute(
         "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+await Seeder.Run(app);
 
 app.Run();
