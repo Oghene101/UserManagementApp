@@ -1,4 +1,5 @@
 using UserManagementApp.Extensions;
+using UserManagementApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
 
 app.UseAuthentication();
 app.UseAuthorization();

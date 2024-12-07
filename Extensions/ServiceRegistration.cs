@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using UserManagementApp.Abstractions;
 using UserManagementApp.Data;
 using UserManagementApp.Models.Entities;
+using UserManagementApp.Services;
 
 namespace UserManagementApp.Extensions;
 
@@ -11,6 +14,8 @@ public static class ServiceRegistration
     {
         // Add services to the container.
         services.AddControllersWithViews();
+        services.AddHttpContextAccessor();
+        services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -24,7 +29,9 @@ public static class ServiceRegistration
 
         // services.AddScoped<IUnitOfWork, UnitOfWork>();
         // services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        // services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IUrlService, UrlService>();
+        services.AddScoped<IEmailService, EmailService>();
         // services.AddScoped<IUserContactService, UserContactService>();
         // services.AddScoped<IContactService, ContactService>();
     }

@@ -27,6 +27,21 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                    <li class="pull-to-right">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-action="Logout" asp-controller="Account">
+                                @{
+                                    var user = await UserManager.GetUserAsync(User);
+                                }
+                                Logout @user!.FirstName
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
+                        }
+                    </li>
                 </ul>
             </div>
         </div>

@@ -1,6 +1,6 @@
-using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using UserManagementApp.Models;
+using UserManagementApp.Models.Dtos;
 using UserManagementApp.Models.ViewModels;
 
 namespace UserManagementApp.Controllers;
@@ -15,11 +15,6 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
     {
         var dummyListOfUsers = new List<UserVm>
         {
@@ -52,9 +47,18 @@ public class HomeController : Controller
         return View(dummyListOfUsers);
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Privacy()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View();
+    }
+
+    [HttpGet("/Error/{statusCode}")]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error(int statusCode)
+    {
+        if (TempData["ResponseDto"] is not string responseDtoJson) return View();
+
+        var responseDto = JsonSerializer.Deserialize<ResponseDto>(responseDtoJson);
+        return View(responseDto);
     }
 }
