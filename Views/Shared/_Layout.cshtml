@@ -27,15 +27,13 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="ManageUser">Dashboard</a>
+                    </li>
                     <li class="pull-to-right">
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <a asp-action="Logout" asp-controller="Account">
-                                @{
-                                    var user = await UserManager.GetUserAsync(User);
-                                }
-                                Logout @user!.FirstName
-                            </a>
+                            <a asp-action="Logout" asp-controller="Account">Logout</a>
                         }
                         else
                         {

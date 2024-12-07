@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using UserManagementApp.Abstractions;
 using UserManagementApp.Models.Dtos;
 using UserManagementApp.Models.ViewModels;
@@ -23,6 +24,8 @@ public class AccountController(
     [HttpPost]
     public async Task<IActionResult> Register(RegisterVm registerVm)
     {
+        if (!ModelState.IsValid) return View(registerVm);
+
         var result = await accountService.RegisterAsync(registerVm);
         if (!result.IsFailure) return LocalRedirect(result.Data);
 
@@ -59,8 +62,16 @@ public class AccountController(
     [HttpPost]
     public async Task<IActionResult> Login(LoginVm loginVm, string? returnUrl)
     {
+        if (!ModelState.IsValid) return View(returnUrl);
+
         var result = await accountService.LoginAsync(loginVm, returnUrl);
-        if (!result.IsFailure) return LocalRedirect(result.Data);
+        if (!result.IsFailure)
+        {
+            if (result.Data.IsNullOrEmpty())
+                return RedirectToAction("Index", "Home");
+            ;
+            return Redirect(result.Data);
+        }
 
         foreach (var error in result.Errors) ModelState.AddModelError(error.Code, error.Message);
 
@@ -109,8 +120,8 @@ public class AccountController(
 
     public async Task<IActionResult> Logout()
     {
-        var result = await accountService.LogoutAsync();
-        return LocalRedirect(result.Data);
+        await accountService.LogoutAsync();
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult AccessDenied()

@@ -18,6 +18,13 @@ public class UrlService(
         var actionContext = new ActionContext(context, context.GetRouteData(), new ActionDescriptor());
         var urlHelper = new UrlHelper(actionContext);
 
+        //
+        var linkGenerator = context.RequestServices.GetRequiredService<LinkGenerator>();
+
+        var errorUrl = linkGenerator.GetPathByAction("Error", "Home");
+        context.Response.Redirect(errorUrl);
+        //
+
         return urlHelper.Action(actionName, controllerName, routeValues)!;
     }
 

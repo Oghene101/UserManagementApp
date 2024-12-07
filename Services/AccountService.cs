@@ -65,7 +65,8 @@ public class AccountService(
         if (!loginResult.Succeeded)
             return new Error[] { new("Account.Error", "Email or password is incorrect.") };
 
-        return urlService.GetRedirectUrl(returnUrl);
+        //return urlService.GetRedirectUrl(returnUrl);
+        return returnUrl ?? "";
     }
 
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordVm forgotPasswordVm)
@@ -97,9 +98,8 @@ public class AccountService(
             : urlService.GenerateUrl("Login", "Account");
     }
 
-    public async Task<Result<string>> LogoutAsync()
+    public async Task LogoutAsync()
     {
         await signInManager.SignOutAsync();
-        return urlService.GenerateUrl("Index", "Home");
     }
 }

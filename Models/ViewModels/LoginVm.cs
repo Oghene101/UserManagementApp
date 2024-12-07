@@ -2,17 +2,26 @@
 
 namespace UserManagementApp.Models.ViewModels;
 
-public record LoginVm(
-    [EmailAddress] string Email,
-    [DataType(DataType.Password)] string Password,
-    bool RememberMe);
+public class LoginVm
+{
+    [EmailAddress] public string Email { get; set; }
+    [DataType(DataType.Password)] public string Password { get; set; }
+    public bool RememberMe { get; set; }
+}
 
-public record RegisterVm(
-    [MaxLength(20)] string FirstName,
-    [MaxLength(20)] string LastName,
-    [EmailAddress] string Email,
+public class RegisterVm
+{
+    [MaxLength(20)] public string FirstName { get; set; }
+
+    [MaxLength(20)] public string LastName { get; set; }
+
+    [EmailAddress] public string Email { get; set; }
+
     [Phone]
     [DataType(DataType.PhoneNumber)]
-    string PhoneNumber,
-    [DataType(DataType.Password)] string Password,
-    [DataType(DataType.Password)] string ConfirmPassword);
+    public string PhoneNumber { get; set; }
+
+    [DataType(DataType.Password)] public string Password { get; set; }
+
+    [DataType(DataType.Password)] public string ConfirmPassword { get; set; }
+}

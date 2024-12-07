@@ -8,7 +8,7 @@
                     <h2>Register here...</h2>
                     <div><a asp-action="Index" asp-controller="home">back to home</a></div>
                 </div>
-                <div asp-validation-summary="All"></div>
+                <div asp-validation-summary="All" style="color: red"></div>
                 <form method="post" asp-action="Register" asp-controller="Account">
                     <p><input asp-for="FirstName" placeholder="First name" autocomplete="off"/></p>
                     <p><input asp-for="LastName" placeholder="Last name" autocomplete="off"/></p>
