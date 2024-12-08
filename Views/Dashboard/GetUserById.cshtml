@@ -3,42 +3,7 @@
 }
 
 
-<h2>All Users</h2>
-<table class="display-table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    @if (Model == null || !Model.TableData.Any())
-    {
-        <div>No record added yet!</div>
-    }
-    else
-    {
-        @foreach (var user in Model.TableData)
-        {
-            <tr>
-                <td>@user.FirstName @user.LastName</td>
-                <td>@user.Email</td>
-                <td class="flex-btw">
-                    <a asp-action="ManageUser" asp-controller="Dashboard" asp-route-userId="@user.Id">View </a>
-                    <a asp-action="" asp-controller="">Edit </a>
-                    <form method="post" asp-action="DeleteUser" asp-controller="Dashboard" asp-route-userId="@user.Id">
-                        <button style="border:none; outline:none; cursor:pointer; color:skyblue;"
-                                onclick="return confirm('do you want to continue?')" type="submit">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-    }
-    </tbody>
-</table>
+<h2>User</h2>
 
 @if (Model.UserDetail != null)
 {
@@ -78,7 +43,7 @@
             <br/>
             <div>
                 <ul>
-                    @foreach (var role in @Model.UserDetail.Roles)
+                    @foreach (var role in Model.UserDetail.Roles)
                     {
                         <li>
                             @role.ToUpper() &nbsp; &nbsp;

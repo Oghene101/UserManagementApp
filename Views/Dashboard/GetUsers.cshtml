@@ -1,0 +1,61 @@
+﻿@model ManageUserViewModel
+@{
+}
+
+
+<h2>All Users</h2>
+<table class="display-table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model == null || !Model.TableData.Any())
+    {
+        <div>No record added yet!</div>
+    }
+    else
+    {
+        var number = 1;
+        @foreach (var user in Model.TableData)
+        {
+            <tr>
+                <td>@(number++)</td>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Email</td>
+                <td class="flex-btw">
+                    <a asp-action="GetUserById" asp-controller="Dashboard" asp-route-userId="@user.Id">View </a>
+                    <a asp-action="" asp-controller="">Edit </a>
+                    <form method="post" asp-action="DeleteUser" asp-controller="Dashboard" asp-route-userId="@user.Id">
+                        <button style="border:none; outline:none; cursor:pointer; color:skyblue;"
+                                onclick="return confirm('do you want to continue?')" type="submit">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div id="pagination-controls" class="flex justify-center space-x-2 mt-4 hidden">
+    <button id="prev-page"
+            class="px-4 py-2 text-black border rounded-md">
+        Previous
+    </button>
+    <span id="page-number">1</span>
+    <button id="next-page"
+            class="px-4 py-2 text-black border rounded-md">
+        Next
+    </button>
+</div>
+
+@section Scripts{
+    <script src="~/js/dashboard/get.users.js"></script>
+}

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserManagementApp.Abstractions;
-using UserManagementApp.Models.Dtos;
+using UserManagementApp.Dtos;
 using UserManagementApp.Models.Entities;
 using UserManagementApp.Models.ViewModels;
+using UserManagementApp.Utilities;
 
 namespace UserManagementApp.Services;
 
@@ -12,7 +12,7 @@ public class DashboardService(
     UserManager<User> userManager,
     RoleManager<IdentityRole> roleManager) : IDashboardService
 {
-    public async Task<Result> AddUserToRoleAsync(string id, string roleName)
+    public async Task<Result> AddUserToRoleAsync(string? id, string roleName)
     {
         if (id.IsNullOrEmpty() || roleName.IsNullOrEmpty()) return new Error[] { Error.NullValue };
 
@@ -43,16 +43,17 @@ public class DashboardService(
         return manageUserViewModel;
     }
 
-    public async Task<Result<ManageUserViewModel>> GetUsersAsync()
+    public async Task<Result<ManageUserViewModel>> GetUsersAsync(PaginationFilter paginationFilter)
     {
-        var users = userManager.Users;
-        if (!users.Any()) return new Error[] { Error.NullValue };
+        var paginatorDto = await userManager.Users.PaginateAsync(paginationFilter);
+        if (!paginatorDto.PageItems!.Any()) return new[] { Error.NullValue };
+
 
         var manageUserVm = new ManageUserViewModel
         {
-            TableData = await users.Select(user =>
+            TableData = paginatorDto.PageItems!.Select(user =>
                     new UserVm(user.Id, user.FirstName, user.LastName, user.Email!, user.PhotoUrl, new List<string>()))
-                .ToListAsync()
+                .ToArray()
         };
 
         return manageUserVm;

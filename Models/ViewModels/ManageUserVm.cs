@@ -13,7 +13,7 @@ public record ManageUserVm(
 public class ManageUserViewModel
 {
     public string RoleName { get; set; }
-    public List<UserVm> TableData { get; set; } = new List<UserVm>();
+    public IEnumerable<UserVm> TableData { get; set; } = [];
     public UserVm UserDetail { get; set; }
 }
 

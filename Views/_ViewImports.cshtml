@@ -4,7 +4,8 @@
 @using UserManagementApp.Models.ViewModels
 @using Microsoft.AspNetCore.Mvc.ModelBinding
 @using UserManagementApp.Models.Entities
-@using UserManagementApp.Models.Dtos
+@using UserManagementApp.Dtos
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@inject IConfiguration configuration
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

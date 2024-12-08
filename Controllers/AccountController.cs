@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using UserManagementApp.Abstractions;
-using UserManagementApp.Models.Dtos;
+using UserManagementApp.Dtos;
 using UserManagementApp.Models.ViewModels;
 
 namespace UserManagementApp.Controllers;
@@ -45,7 +45,7 @@ public class AccountController(
     public async Task<IActionResult> ConfirmEmail(ConfirmationDto confirmationDto)
     {
         var result = await accountService.ConfirmEmailAsync(confirmationDto);
-        if (!result.IsFailure) return LocalRedirect(result.Data);
+        if (!result.IsFailure) return RedirectToAction("Index", "Home");
 
         foreach (var error in result.Errors) ModelState.AddModelError(error.Code, error.Message);
 

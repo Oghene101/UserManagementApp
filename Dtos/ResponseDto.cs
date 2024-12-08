@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace UserManagementApp.Models.Dtos;
+namespace UserManagementApp.Dtos;
 
 public class ResponseDto(
     bool isSuccess,

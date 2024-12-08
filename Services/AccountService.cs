@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Web;
+using Microsoft.AspNetCore.Identity;
 using UserManagementApp.Abstractions;
 using UserManagementApp.Constants;
-using UserManagementApp.Models.Dtos;
+using UserManagementApp.Dtos;
 using UserManagementApp.Models.Entities;
 using UserManagementApp.Models.ViewModels;
 
@@ -11,10 +12,14 @@ public class AccountService(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
     IUrlService urlService,
-    IEmailService emailService) : IAccountService
+    IEmailService emailService,
+    IConfiguration configuration) : IAccountService
 {
     public async Task<Result<string>> RegisterAsync(RegisterVm registerVm)
     {
+        var userExists = await userManager.FindByEmailAsync(registerVm.Email) != null;
+        if (userExists) return new Error[] { new("Account.Error", "Email already exists.") };
+
         var user = User.Create(registerVm);
 
         var createUserResult = await userManager.CreateAsync(user, registerVm.Password);
@@ -27,17 +32,12 @@ public class AccountService(
             return addToRoleResult.Errors
                 .Select(error => new Error(error.Code, error.Description)).ToArray();
 
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var link = urlService.GenerateUrl("ConfirmEmail", "Account", new { user.Email, token });
-        var body =
-            $"Hi {user.FirstName}, <br/> please click the following link: <a href='{link}'>here</a> to confirm your email.";
-
-        await emailService.SendEmailAsync(user.Email, "Confirm Email", body);
+        await SendConfirmationEmailAsync(user);
 
         return urlService.GenerateUrl("RegisterConfirmation", "Account", new { name = user.FirstName });
     }
 
-    public async Task<Result<string>> ConfirmEmailAsync(ConfirmationDto confirmationDto)
+    public async Task<Result> ConfirmEmailAsync(ConfirmationDto confirmationDto)
     {
         var user = await userManager.FindByEmailAsync(confirmationDto.Email);
         if (user == null)
@@ -48,7 +48,7 @@ public class AccountService(
             return confirmEmailResult.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
 
         await signInManager.SignInAsync(user, false);
-        return urlService.GenerateUrl("Index", "Home");
+        return Result.Success();
     }
 
     public async Task<Result<string>> LoginAsync(LoginVm loginVm, string? returnUrl)
@@ -59,16 +59,20 @@ public class AccountService(
 
         var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(user);
         if (!isEmailConfirmed)
-            return new Error[] { new("Account.Error", "Confirm your email and try again.") };
+        {
+            await SendConfirmationEmailAsync(user);
+            return new Error[]
+                { new("Account.Error", "Confirm your email with the link sent to your email and try again.") };
+        }
 
         var loginResult = await signInManager.PasswordSignInAsync(user, loginVm.Password, loginVm.RememberMe, false);
         if (!loginResult.Succeeded)
             return new Error[] { new("Account.Error", "Email or password is incorrect.") };
 
-        //return urlService.GetRedirectUrl(returnUrl);
         return returnUrl ?? "";
     }
 
+    //TODO
     public async Task<Result> ForgotPasswordAsync(ForgotPasswordVm forgotPasswordVm)
     {
         var user = await userManager.FindByEmailAsync(forgotPasswordVm.Email);
@@ -101,5 +105,16 @@ public class AccountService(
     public async Task LogoutAsync()
     {
         await signInManager.SignOutAsync();
+    }
+
+    private async Task SendConfirmationEmailAsync(User user)
+    {
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var link = configuration["ConfirmEmailUrl"] +
+                   $"Email={HttpUtility.UrlEncode(user.Email)}&Token={HttpUtility.UrlEncode(token)}";
+        var body =
+            $"Hi {user.FirstName}, <br/> please click the link: <a href='{link}'>here</a> to confirm your email.";
+
+        await emailService.SendEmailAsync(user.Email, "Confirm Email", body);
     }
 }

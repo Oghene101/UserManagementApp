@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var appBaseUrl = configuration["AppBaseUrl"];
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -28,7 +32,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="ManageUser">Dashboard</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="GetUsers">Dashboard</a>
                     </li>
                     <li class="pull-to-right">
                         @if (SignInManager.IsSignedIn(User))
@@ -58,6 +62,7 @@
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">const appBaseUrl = "@appBaseUrl"</script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", false)
 </body>

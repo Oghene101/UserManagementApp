@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserManagementApp.Models.Dtos;
+namespace UserManagementApp.Dtos;
 
 public record ConfirmationDto(
     [EmailAddress] string Email,

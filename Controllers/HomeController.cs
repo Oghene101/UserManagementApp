@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using UserManagementApp.Models.Dtos;
+using UserManagementApp.Dtos;
 using UserManagementApp.Models.ViewModels;
 
 namespace UserManagementApp.Controllers;

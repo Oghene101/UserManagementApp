@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UserManagementApp.Abstractions;
 using UserManagementApp.Constants;
-using UserManagementApp.Models.ViewModels;
+using UserManagementApp.Dtos;
 
 namespace UserManagementApp.Controllers;
 
@@ -10,20 +10,28 @@ namespace UserManagementApp.Controllers;
 public class DashboardController(
     IDashboardService dashboardService) : Controller
 {
-    // GET
-    public IActionResult Index()
+    [HttpGet("Dashboard/Users")]
+    public async Task<IActionResult> GetUsers(int pageNumber = 1, int pageSize = 10)
     {
-        return View();
+        var paginationFilter = new PaginationFilter(pageNumber, pageSize);
+
+        //await dashboardService.AddUserToRoleAsync(userId, model.RoleName);
+        var result = await dashboardService.GetUsersAsync(paginationFilter);
+        //manageUserViewModel = await dashboardService.GetUserByIdAsync(userId);
+
+        // Determine if this is an API call or a view rendering
+        if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
+            return Ok(result.Data.TableData); // Return JSON for API calls
+
+        return View(result.Data);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> ManageUser(ManageUserViewModel model, string? userId, string action)
+    [HttpGet("Dashboard/User/{userId}")]
+    public async Task<IActionResult> GetUserById([FromRoute] string userId)
     {
-        await dashboardService.AddUserToRoleAsync(userId, model.RoleName);
-        await dashboardService.GetUsersAsync();
-        await dashboardService.GetUserByIdAsync(userId);
+        var result = await dashboardService.GetUserByIdAsync(userId);
 
-        return View(model);
+        return View(result.Data);
     }
 
     [HttpDelete("{id}")]
@@ -39,7 +47,7 @@ public class DashboardController(
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRole([FromRoute] string id)
     {
-        var result = await dashboardService.GetUsersAsync();
+        var result = await dashboardService.DeleteRoleAsync(id);
         if (!result.IsFailure) return View("ManagerUser");
 
         ViewData["Error"] = result.Errors;

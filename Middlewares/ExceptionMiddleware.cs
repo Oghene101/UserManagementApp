@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using UserManagementApp.Models.Dtos;
+using UserManagementApp.Dtos;
 
 namespace UserManagementApp.Middlewares;
 

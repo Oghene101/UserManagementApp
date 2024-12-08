@@ -1,4 +1,4 @@
-namespace UserManagementApp.Models.Dtos;
+namespace UserManagementApp.Dtos;
 
 public class Result
 {
