@@ -21,9 +21,9 @@ public class DashboardController(
 
         // Determine if this is an API call or a view rendering
         if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
-            return Ok(result.Data.TableData); // Return JSON for API calls
+            return Ok(result); // Return JSON for API calls
 
-        return View(result.Data);
+        return View(result);
     }
 
     [HttpGet("Dashboard/User/{userId}")]
@@ -34,10 +34,19 @@ public class DashboardController(
         return View(result.Data);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("DeleteUser/{id}")]
     public async Task<IActionResult> DeleteUser([FromRoute] string id)
     {
         var result = await dashboardService.DeleteUserAsync(id);
+
+        if (Request.Headers.Accept.Contains("application/json",
+                StringComparer.OrdinalIgnoreCase)) // Return JSON for API calls
+        {
+            if (!result.IsFailure)
+                return Ok(result);
+            return BadRequest(result);
+        }
+
         if (!result.IsFailure) return View("ManageUser");
 
         ViewData["Error"] = result.Errors;

@@ -7,7 +7,7 @@ public class PaginationFilter(int pageNumber = 1, int pageSize = 10)
 }
 
 public record PaginatorDto<T>(
-    T? PageItems,
+    T PageItems,
     int PageSize,
     int CurrentPage,
     int NumberOfPages);

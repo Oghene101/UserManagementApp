@@ -1,9 +1,9 @@
-﻿@model ManageUserViewModel
+﻿@model PaginatorDto<IEnumerable<UserVm>>
 @{
 }
 
 
-<h2>All Users</h2>
+<h2>All Users- @(Model.NumberOfPages * Model.PageSize)</h2>
 <table class="display-table">
     <thead>
     <tr>
@@ -14,14 +14,14 @@
     </tr>
     </thead>
     <tbody>
-    @if (Model == null || !Model.TableData.Any())
+    @if (!Model.PageItems.Any())
     {
         <div>No record added yet!</div>
     }
     else
     {
         var number = 1;
-        @foreach (var user in Model.TableData)
+        @foreach (var user in Model.PageItems)
         {
             <tr>
                 <td>@(number++)</td>
@@ -30,12 +30,10 @@
                 <td class="flex-btw">
                     <a asp-action="GetUserById" asp-controller="Dashboard" asp-route-userId="@user.Id">View </a>
                     <a asp-action="" asp-controller="">Edit </a>
-                    <form method="post" asp-action="DeleteUser" asp-controller="Dashboard" asp-route-userId="@user.Id">
-                        <button style="border:none; outline:none; cursor:pointer; color:skyblue;"
-                                onclick="return confirm('do you want to continue?')" type="submit">
-                            Delete
-                        </button>
-                    </form>
+                    <button class="delete-user" style="border:none; outline:none; cursor:pointer; color:skyblue;"
+                            type="button" data-id="@user.Id">
+                        Delete
+                    </button>
                 </td>
             </tr>
         }
@@ -57,5 +55,8 @@
 </div>
 
 @section Scripts{
+    <script type="text/javascript">
+        let numberOfPages = Number(@Model.NumberOfPages);
+    </script>
     <script src="~/js/dashboard/get.users.js"></script>
 }

@@ -43,20 +43,21 @@ public class DashboardService(
         return manageUserViewModel;
     }
 
-    public async Task<Result<ManageUserViewModel>> GetUsersAsync(PaginationFilter paginationFilter)
+    public async Task<PaginatorDto<IEnumerable<UserVm>>> GetUsersAsync(PaginationFilter paginationFilter)
     {
-        var paginatorDto = await userManager.Users.PaginateAsync(paginationFilter);
-        if (!paginatorDto.PageItems!.Any()) return new[] { Error.NullValue };
+        //var paginatorDto = await userManager.Users.PaginateAsync(paginationFilter);
+        var paginatorDto = await userManager.Users.Select(user =>
+                new UserVm(user.Id, user.FirstName, user.LastName, user.Email!, user.PhotoUrl, new List<string>()))
+            .PaginateAsync(paginationFilter);
 
+        // var manageUserVm = new ManageUserViewModel
+        // {
+        //     TableData = paginatorDto.PageItems!.Select(user =>
+        //             new UserVm(user.Id, user.FirstName, user.LastName, user.Email!, user.PhotoUrl, new List<string>()))
+        //         .ToArray()
+        // };
 
-        var manageUserVm = new ManageUserViewModel
-        {
-            TableData = paginatorDto.PageItems!.Select(user =>
-                    new UserVm(user.Id, user.FirstName, user.LastName, user.Email!, user.PhotoUrl, new List<string>()))
-                .ToArray()
-        };
-
-        return manageUserVm;
+        return paginatorDto;
     }
 
 
