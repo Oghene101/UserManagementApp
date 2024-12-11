@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UserManagementApp.Abstractions;
-using UserManagementApp.Constants;
 using UserManagementApp.Dtos;
 
 namespace UserManagementApp.Controllers;
 
-[Authorize(Roles = Roles.Admin)]
+//[Authorize(Roles = Roles.Admin)]
 public class DashboardController(
     IDashboardService dashboardService) : Controller
 {

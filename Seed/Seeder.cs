@@ -39,6 +39,9 @@ public class Seeder
                 LastName = "Karieren",
                 UserName = "ogheneruemu.engineer",
                 Email = "ogheneruemu.engineer@gmail.com",
+                EmailConfirmed = true,
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdateAt = DateTimeOffset.UtcNow
             };
 
             await userManager.CreateAsync(defaultAdmin, "Admin@123");
@@ -50,7 +53,9 @@ public class Seeder
                 .RuleFor(u => u.LastName, f => f.Name.LastName())
                 .RuleFor(u => u.Email, f => f.Internet.Email())
                 .RuleFor(u => u.UserName, (f, u) => u.Email)
-                .RuleFor(u => u.EmailConfirmed, (f, u) => true);
+                .RuleFor(u => u.EmailConfirmed, (f, u) => true)
+                .RuleFor(u => u.CreatedAt, () => DateTimeOffset.UtcNow)
+                .RuleFor(u => u.UpdateAt, () => DateTimeOffset.UtcNow);
 
             // Generate dummy data
             var fakeUsers = userFaker.Generate(100);
