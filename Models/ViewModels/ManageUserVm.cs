@@ -1,4 +1,6 @@
-﻿namespace UserManagementApp.Models.ViewModels;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace UserManagementApp.Models.ViewModels;
 
 public record ManageUserVm(
     string Action,
@@ -30,4 +32,4 @@ public record UserVm(
     string LastName,
     string Email,
     string PhotoUrl,
-    IEnumerable<string>? Roles = null);
+    IEnumerable<IdentityRole>? Roles = null);

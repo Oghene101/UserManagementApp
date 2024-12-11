@@ -1,59 +1,68 @@
 ﻿@model ManageUserViewModel
+
 @{
+    ViewData["Title"] = $"{Model.UserDetail.FirstName} {Model.UserDetail.LastName}";
 }
 
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold text-gray-800">@Model.UserDetail.FirstName @Model.UserDetail.LastName</h2>
 
-<h2>User</h2>
-
-@if (Model.UserDetail != null)
-{
-    <div class="detail-box">
-        <div class="left-box">
-            <div>
-                <img src="@Model.UserDetail.PhotoUrl"/>
+    @if (Model.UserDetail != null)
+    {
+        <div class="flex flex-wrap md:flex-nowrap gap-6">
+            <!-- Left Panel -->
+            <div class="flex flex-col items-center md:items-start">
+                <img src="@Model.UserDetail.PhotoUrl" alt="User Photo" class="w-40 rounded-full object-cover mb-4"/>
                 <div>
-                    <p>
-                    <div>Name</div>
-                    <div>@Model.UserDetail.FirstName @Model.UserDetail.LastName</div>
-                    </p>
-                    <p>
-                    <div>Email</div>
-                    <div>@Model.UserDetail.Email</div>
+                    <p class="text-gray-700">
+                        <span class="font-bold">Name:</span> @Model.UserDetail.FirstName @Model.UserDetail.LastName</p>
+                    <p class="text-gray-700">
+                        <span class="font-bold">Email: @Model.UserDetail.Email </span>
                     </p>
                 </div>
             </div>
-        </div>
-        <div class="right-box">
-            <p>
-            <div class="flex-btw">
-                <div>User's Roles</div>
-                <div>
-                    <button id="add-user-role-btn" class="btn btn-primary">Add New User Role</button>
+
+            <!-- Right Panel -->
+            <div class="w-full md:w-2/3">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">User's Roles</h3>
+                    <button id="add-user-role-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Add New User Role
+                    </button>
                 </div>
-            </div>
-            <br/>
-            <div class="new-user-role-panel hide" id="new-user-role-panel">
-                <h2>Add New Role</h2>
-                <form method="post" asp-action="ManageUser" asp-controller="Dashboard"
-                      asp-route-userId="@Model.UserDetail.Id">
-                    <input asp-for="RoleName" placeholder="Role name"/>
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </form>
-            </div>
-            <br/>
-            <div>
-                <ul>
+
+                <!-- Add New Role Pane -->
+                <div id="new-user-role-panel" class="hidden border p-4 bg-gray-100 rounded">
+                    <h4 class="text-md font-medium text-gray-700 mb-2">Add New Role</h4>
+                    <form method="post" asp-action="ManageUser" asp-controller="Dashboard"
+                          asp-route-userId="@Model.UserDetail.Id">
+                        <input asp-for="RoleName" placeholder="Role name"/>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Roles List -->
+                <ul class="mt-4 space-y-2">
                     @foreach (var role in Model.UserDetail.Roles)
                     {
-                        <li>
-                            @role.ToUpper() &nbsp; &nbsp;
-                            <a asp-action="" asp-controller="">Edit</a> |
-                            <a asp-action="" asp-controller="">Delete</a>
+                        <li class="flex justify-between items-center bg-white p-3 border rounded">
+                            <span class="text-gray-700">@role.Name.ToUpper()</Span>
+                            <div class="flex space-x-2">
+                                <a class="text-green-500 hover:underline" asp-action="" asp-controller="">Edit</a>
+                                &nbsp; |
+                                <a class="delete-user-role text-red-500 hover:underline" asp-action="DeleteRole"
+                                   asp-controller="Dashboard" asp-route-id="@role.Id">Delete</a>
+                            </div>
                         </li>
                     }
                 </ul>
             </div>
-            </p>
         </div>
-    </div>
+    }
+</div>
+
+@section Scripts{
+    <script src="~/js/dashboard/get.user.by.id.js"></script>
 }

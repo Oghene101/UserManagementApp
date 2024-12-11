@@ -1,7 +1,7 @@
 ﻿const pageNumberElt = document.getElementById("page-number");
 const prevPage = document.getElementById("prev-page");
 const nextPage = document.getElementById("next-page");
-const tableBody = document.querySelector(".display-table tbody");
+const tableBody = document.querySelector(".users-table tbody");
 
 let pageNumber = 1, pageSize = 10;
 
@@ -34,13 +34,13 @@ document.querySelectorAll(".delete-user").forEach((btn) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 const userId = event.target.getAttribute("data-id");
-                deleteUserById(userId);
-
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
-                });
+                deleteUserById(userId)
+                    .then(() => loadPage())
+                    .then(() => Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    }));
             }
         });
 
@@ -50,7 +50,7 @@ document.querySelectorAll(".delete-user").forEach((btn) => {
 function loadPage() {
     getUsers(pageNumber)
         .then(data => populateTable(data))
-        .then(updatePaginationControls());
+        .then(() => updatePaginationControls());
 }
 
 async function getUsers(pageNumber) {
@@ -122,16 +122,16 @@ function populateTable(data) {
 
     data.pageItems.forEach((user, index) => {
         const rowNumber = startRowNumber + index;
-        const getUserById = `${appBaseUrl}User/${user.id}`;
+        const getUserById = `${appBaseUrl}Dashboard/User/${user.id}`;
         tableRows +=
             `<tr>
-                <td>${rowNumber}</td>
-                <td>${user.firstName} ${user.lastName}</td>
-                <td>${user.email}</td>
-                <td class="flex-btw">
-                    <a href="${getUserById}">View </a>
-                    <a href="">Edit </a>
-                    <button class="delete-user" style="border:none; outline:none; cursor:pointer; color:skyblue;"
+                <td class="border border-gray-300 px-4 py-2">${rowNumber}</td>
+                <td class="border border-gray-300 px-4 py-2">${user.firstName} ${user.lastName}</td>
+                <td class="border border-gray-300 px-4 py-2">${user.email}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <a class="text-blue-500 hover:underline" href="${getUserById}">View </a>
+                    <a class="text-green-500 hover:underline" href="">Edit </a>
+                    <button class="delete-user text-red-500 hover:underline"
                             type="button" data-id="${user.id}">
                         Delete
                     </button>
@@ -154,13 +154,13 @@ function populateTable(data) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const userId = event.target.getAttribute("data-id");
-                    deleteUserById(userId);
-
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
-                        icon: "success"
-                    });
+                    deleteUserById(userId)
+                        .then(() => loadPage())
+                        .then(() => Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        }));
                 }
             });
         });

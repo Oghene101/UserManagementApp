@@ -39,6 +39,18 @@ public class DashboardController(
     {
         var result = await dashboardService.DeleteUserAsync(id);
 
+        if (!Request.Headers.Accept.Contains("application/json",
+                StringComparer.OrdinalIgnoreCase)) return View("GetUsers"); // Return JSON for API calls
+        if (!result.IsFailure)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
+    [HttpDelete("DeleteRole/{id}")]
+    public async Task<IActionResult> DeleteRole([FromRoute] string id)
+    {
+        var result = await dashboardService.DeleteRoleAsync(id);
+
         if (Request.Headers.Accept.Contains("application/json",
                 StringComparer.OrdinalIgnoreCase)) // Return JSON for API calls
         {
@@ -47,19 +59,7 @@ public class DashboardController(
             return BadRequest(result);
         }
 
-        if (!result.IsFailure) return View("ManageUser");
-
         ViewData["Error"] = result.Errors;
-        return View("ManageUser");
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteRole([FromRoute] string id)
-    {
-        var result = await dashboardService.DeleteRoleAsync(id);
-        if (!result.IsFailure) return View("ManagerUser");
-
-        ViewData["Error"] = result.Errors;
-        return View("ManageUser");
+        return View("GetUsers");
     }
 }

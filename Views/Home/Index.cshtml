@@ -6,24 +6,24 @@
 
 @*<Partial name="_NavbarPartial" />*@
 
-<div class="container">
-    <main role="main" class="pb-3">
-        <div class="my_card_panel">
+<div class="container mx-auto px-4 py-6">
+    <main role="main">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach (var user in Model)
             {
-                <a href="#">
-                    <div class="my_card">
-                        <div class="my_card_image_box">
-                            <img src="@user.PhotoUrl"/>
-                        </div>
-                        <div class="my_card_desc">
-                            <p>
-                                @user.FirstName @user.LastName
-                            </p>
-                            <p>
-                                @user.Email
-                            </p>
-                        </div>
+                <a href="#"
+                   class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div>
+                        <img src="@user.PhotoUrl" class="w-full h-48 object-cover"
+                             alt="@user.FirstName @user.LastName"/>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-lg font-semibold text-gray-800">
+                            @user.FirstName @user.LastName
+                        </p>
+                        <p class="text-sm text-gray-600">
+                            @user.Email
+                        </p>
                     </div>
                 </a>
             }

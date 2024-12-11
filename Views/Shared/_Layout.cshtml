@@ -1,4 +1,5 @@
-﻿@{
+@{
+    ViewBag.IsLoggedOut = true;
     var appBaseUrl = configuration["AppBaseUrl"];
 }
 
@@ -9,63 +10,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - UserManagementApp</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/app.css"/>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/> *@
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> *@
     <link rel="stylesheet" href="~/lib/toastr/css/toastr.min.css"/>
     <link rel="stylesheet" href="~/lib/sweet-alert-2/css/sweetalert2.min.css"/>
     <link rel="stylesheet" href="~/UserManagementApp.styles.css" asp-append-version="true"/>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">UserManagementApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="GetUsers">Dashboard</a>
-                    </li>
-                    <li class="pull-to-right">
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <a asp-action="Logout" asp-controller="Account">Logout</a>
-                        }
-                        else
-                        {
-                            <a class="btn btn-primary" asp-action="Login" asp-controller="Account">Login</a>
-                        }
-                    </li>
-                </ul>
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <a class="text-xl font-semibold text-blue-600" asp-area="" asp-controller="Home" asp-action="Index">UserManagementApp</a>
+            <div class="space-x-4">
+                <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Home"
+                   asp-action="Index">Home</a>
+                <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Dashboard"
+                   asp-action="GetUsers">Dashboard</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a class="text-red-600 hover:text-red-800" asp-action="Logout" asp-controller="Account">Logout</a>
+                }
+                else
+                {
+                    <a class="text-blue-600 hover:text-blue-800" asp-action="Login" asp-controller="Account">Login</a>
+                }
             </div>
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
+
+<div class="container mx-auto px-4 py-6 mt-10 flex-grow">
+    <main role="main">
         @RenderBody()
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2024 - UserManagementApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto text-center">
+        &copy; 2024 - UserManagementApp - <a class="text-blue-400 hover:underline" asp-area="" asp-controller="Home"
+                                             asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/toastr/js/toastr.min.js"></script>
 <script src="~/lib/sweet-alert-2/js/sweetalert2.all.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 <script type="text/javascript">const appBaseUrl = "@appBaseUrl"</script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", false)

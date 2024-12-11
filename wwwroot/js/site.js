@@ -18,7 +18,6 @@ if (addRoleBtn != null)
 
 if (addUserRoleBtn != null)
     addUserRoleBtn.addEventListener('click', () => {
-        newUserRolePanel.classList.remove("hide");
-        newUserRolePanel.classList.add("show");
+        newUserRolePanel.classList.toggle("hidden");
     });
 

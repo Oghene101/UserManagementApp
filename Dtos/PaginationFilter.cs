@@ -10,4 +10,5 @@ public record PaginatorDto<T>(
     T PageItems,
     int PageSize,
     int CurrentPage,
-    int NumberOfPages);
+    int NumberOfPages,
+    int TotalItems);

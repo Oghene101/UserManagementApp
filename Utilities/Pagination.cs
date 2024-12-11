@@ -19,6 +19,6 @@ public static class Pagination
             .ToListAsync() ?? [];
 
         return new PaginatorDto<IEnumerable<TSource>>(pageItems, paginationFilter.PageSize,
-            paginationFilter.PageNumber, numberOfPages);
+            paginationFilter.PageNumber, numberOfPages, count);
     }
 }
