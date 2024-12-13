@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserManagementApp.Abstractions;
+using UserManagementApp.Constants;
 using UserManagementApp.Dtos;
 
 namespace UserManagementApp.Controllers;
 
-//[Authorize(Roles = Roles.Admin)]
+[Authorize(Roles = Roles.Admin)]
 public class DashboardController(
     IDashboardService dashboardService) : Controller
 {
@@ -16,6 +18,20 @@ public class DashboardController(
         //await dashboardService.AddUserToRoleAsync(userId, model.RoleName);
         var result = await dashboardService.GetUsersAsync(paginationFilter);
         //manageUserViewModel = await dashboardService.GetUserByIdAsync(userId);
+
+        // Determine if this is an API call or a view rendering
+        if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
+            return Ok(result); // Return JSON for API calls
+
+        return View(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SearchUsers(string searchTerm, int pageNumber = 1, int pageSize = 10)
+    {
+        var paginationFilter = new PaginationFilter(pageNumber, pageSize);
+
+        var result = await dashboardService.SearchUsersAsync(searchTerm, paginationFilter);
 
         // Determine if this is an API call or a view rendering
         if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))

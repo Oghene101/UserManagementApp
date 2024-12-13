@@ -10,4 +10,7 @@ public interface IDashboardService
     public Task<PaginatorDto<IEnumerable<UserVm>>> GetUsersAsync(PaginationFilter paginationFilter);
     public Task<Result> DeleteUserAsync(string id);
     public Task<Result> DeleteRoleAsync(string id);
+
+    public Task<PaginatorDto<IEnumerable<UserVm>>> SearchUsersAsync(string searchTerm,
+        PaginationFilter paginationFilter);
 }

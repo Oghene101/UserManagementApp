@@ -1,6 +1,7 @@
+@using UserManagementApp.Constants
 @{
     ViewBag.IsLoggedOut = true;
-    var appBaseUrl = configuration["AppBaseUrl"];
+    var appBaseUrl = Configuration["AppBaseUrl"];
 }
 
 <!DOCTYPE html>
@@ -11,8 +12,6 @@
     <title>@ViewData["Title"] - UserManagementApp</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/css/app.css"/>
-    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/> *@
-    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/> *@
     <link rel="stylesheet" href="~/lib/toastr/css/toastr.min.css"/>
     <link rel="stylesheet" href="~/lib/sweet-alert-2/css/sweetalert2.min.css"/>
     <link rel="stylesheet" href="~/UserManagementApp.styles.css" asp-append-version="true"/>
@@ -20,17 +19,27 @@
 <body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
 <header>
     <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between flex-wrap">
             <a class="text-xl font-semibold text-blue-600" asp-area="" asp-controller="Home" asp-action="Index">UserManagementApp</a>
-            <div class="space-x-4">
+            <div class="space-x-4 flex flex-wrap justify-between items-center">
                 <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Home"
                    asp-action="Index">Home</a>
                 <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Dashboard"
-                   asp-action="GetUsers">Dashboard</a>
+
+                @if (SignInManager.IsSignedIn(User) && User.IsInRole(Roles.Admin))
+                {
+                    <a class="text-gray-700 hover:text-blue-500" asp-area="" asp-controller="Dashboard"
+                       asp-action="GetUsers">Dashboard</a>
+                }
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a class="text-red-600 hover:text-red-800" asp-action="Logout" asp-controller="Account">Logout</a>
+                    var user = await UserManager.GetUserAsync(User);
+                    <a id="logout" class="text-red-600 hover:text-red-800" asp-action="Logout" asp-controller="Account">
+                        <div class="flex flex-col items-center space-x-2">
+                            <img src="" alt="Profile Picture" class="w-8 h-8 rounded-full object-cover">
+                            <span class="text-red-600 hover:text-red-800">@user.FirstName.@user.LastName</span>
+                        </div>
+                    </a>
                 }
                 else
                 {
@@ -41,7 +50,7 @@
     </nav>
 </header>
 
-<div class="container mx-auto px-4 py-6 mt-10 flex-grow">
+<div class="container px-4 py-6 flex-grow">
     <main role="main">
         @RenderBody()
     </main>
@@ -56,7 +65,6 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/toastr/js/toastr.min.js"></script>
 <script src="~/lib/sweet-alert-2/js/sweetalert2.all.min.js"></script>
-@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 <script type="text/javascript">const appBaseUrl = "@appBaseUrl"</script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", false)

@@ -1,9 +1,52 @@
-﻿const pageNumberElt = document.getElementById("page-number");
+﻿const search = document.getElementById('search-users');
+const pageNumberElt = document.getElementById("page-number");
 const prevPage = document.getElementById("prev-page");
 const nextPage = document.getElementById("next-page");
 const tableBody = document.querySelector(".users-table tbody");
 
-let pageNumber = 1, pageSize = 10;
+let pageNumber = 1, pageSize = 10, debounceTimeout;
+search.addEventListener("input", (event) => {
+    clearTimeout(debounceTimeout);
+
+    debounceTimeout = setTimeout(() => {
+        const searchTerm = event.target.value;
+
+        if (searchTerm === "") return loadPage();
+
+        searchUsers(searchTerm)
+            .then((response) => populateTable(response));
+    }, 500);
+});
+
+async function searchUsers(searchTerm) {
+    try {
+        let response = await fetch(`${appBaseUrl}Dashboard/SearchUsers?searchTerm=${searchTerm}&pageNumber=${pageNumber}&pageSize=${pageSize}`, {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            let errorResponse;
+
+            try {
+                errorResponse = await response.json();
+            } catch (jsonError) {
+                errorResponse = await response.text();
+            }
+
+            console.table(response);
+            throw errorResponse;
+        }
+
+        let jsonData = await response.json();
+        console.log({pageNumber, data: jsonData});
+        return jsonData;
+    } catch (error) {
+        console.table(error);
+    }
+}
+
 
 nextPage.addEventListener("click", async () => {
     console.log("nxt page clicked.");
@@ -31,16 +74,18 @@ document.querySelectorAll(".delete-user").forEach((btn) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
                 const userId = event.target.getAttribute("data-id");
-                deleteUserById(userId)
-                    .then(() => loadPage())
-                    .then(() => Swal.fire({
+                let response = await deleteUserById(userId)
+                if (response !== "error") {
+                    loadPage();
+                    Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",
                         icon: "success"
-                    }));
+                    })
+                }
             }
         });
 
@@ -111,6 +156,7 @@ async function deleteUserById(userId) {
             error.errors.forEach((error) => {
                 toastr.error((error.message === "The specified value is null.") ? "User has been deleted." : error.message);
             });
+            return "error";
         }
         console.table(error);
     }
@@ -120,11 +166,12 @@ function populateTable(data) {
     let tableRows = "";
     let startRowNumber = (pageNumber - 1) * pageSize + 1; //to avoid pagination resetting row numbering for each page, hence startRowNumber.
 
-    data.pageItems.forEach((user, index) => {
-        const rowNumber = startRowNumber + index;
-        const getUserById = `${appBaseUrl}Dashboard/User/${user.id}`;
-        tableRows +=
-            `<tr>
+    if (data.pageItems.length > 0) {
+        data.pageItems.forEach((user, index) => {
+            const rowNumber = startRowNumber + index;
+            const getUserById = `${appBaseUrl}Dashboard/User/${user.id}`;
+            tableRows +=
+                `<tr>
                 <td class="border border-gray-300 px-4 py-2">${rowNumber}</td>
                 <td class="border border-gray-300 px-4 py-2">${user.firstName} ${user.lastName}</td>
                 <td class="border border-gray-300 px-4 py-2">${user.email}</td>
@@ -137,34 +184,39 @@ function populateTable(data) {
                     </button>
                 </td>
             </tr>`;
-    });
-    tableBody.innerHTML = tableRows;
+        });
+        tableBody.innerHTML = tableRows;
 
-    //Re-bind delete buttons
-    document.querySelectorAll(".delete-user").forEach((btn) => {
-        btn.addEventListener("click", (event) => {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const userId = event.target.getAttribute("data-id");
-                    deleteUserById(userId)
-                        .then(() => loadPage())
-                        .then(() => Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success"
-                        }));
-                }
+        //Re-bind delete buttons
+        document.querySelectorAll(".delete-user").forEach((btn) => {
+            btn.addEventListener("click", (event) => {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const userId = event.target.getAttribute("data-id");
+                        let response = await deleteUserById(userId)
+                        if (response !== "error") {
+                            loadPage();
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            })
+                        }
+                    }
+                });
             });
         });
-    });
+    } else {
+        tableBody.innerHTML = `<tr><td colspan="4">No items match search.</td></tr>`;
+    }
 }
 
 function updatePaginationControls() {
