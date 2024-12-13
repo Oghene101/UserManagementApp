@@ -7,11 +7,6 @@ public record ManageUserVm(
     string? Id,
     string? RoleName);
 
-// public record ManageUserViewModel(
-//     string RoleName,
-//     List<UserVm> TableData,
-//     UserVm UserDetail);
-
 public class ManageUserViewModel
 {
     public string RoleName { get; set; }

@@ -37,7 +37,7 @@ public class DashboardController(
         if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
             return Ok(result); // Return JSON for API calls
 
-        return View(result);
+        return View("GetUsers");
     }
 
     [HttpGet("Dashboard/User/{userId}")]
@@ -48,11 +48,50 @@ public class DashboardController(
         return View(result.Data);
     }
 
+    [HttpGet("Dashboard/Roles")]
+    public async Task<IActionResult> GetRoles(int pageNumber = 1, int pageSize = 10)
+    {
+        var paginationFilter = new PaginationFilter(pageNumber, pageSize);
+
+        var result = await dashboardService.GetRolesAsync(paginationFilter);
+
+        // Determine if this is an API call or a view rendering
+        if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
+            return Ok(result); // Return JSON for API calls
+
+        return View(result);
+    }
+
+    //TODO
+    [HttpGet]
+    public async Task<IActionResult> SearchRoles(string searchTerm, int pageNumber = 1, int pageSize = 10)
+    {
+        var paginationFilter = new PaginationFilter(pageNumber, pageSize);
+
+        var result = await dashboardService.SearchUsersAsync(searchTerm, paginationFilter);
+
+        // Determine if this is an API call or a view rendering
+        if (Request.Headers.Accept.Contains("application/json", StringComparer.OrdinalIgnoreCase))
+            return Ok(result); // Return JSON for API calls
+
+        return View("GetUsers");
+    }
+
+    //TODO
+    [HttpGet("Dashboard/Role/{roleId}")]
+    public async Task<IActionResult> GetRoleById([FromRoute] string roleId)
+    {
+        var result = await dashboardService.GetUserByIdAsync(roleId);
+
+        return View(result.Data);
+    }
+
     [HttpDelete("DeleteUser/{id}")]
     public async Task<IActionResult> DeleteUser([FromRoute] string id)
     {
         var result = await dashboardService.DeleteUserAsync(id);
 
+        // Determine if this is an API call or a view rendering
         if (!Request.Headers.Accept.Contains("application/json",
                 StringComparer.OrdinalIgnoreCase)) return View("GetUsers"); // Return JSON for API calls
         if (!result.IsFailure)

@@ -4,6 +4,6 @@ public record ManageRoleVm(
     string RoleName,
     IEnumerable<RoleVm> RolesToReturn);
 
-public class RoleVm(
+public record RoleVm(
     string Id,
     string Name);

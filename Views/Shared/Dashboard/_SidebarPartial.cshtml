@@ -1,8 +1,10 @@
 ﻿<aside class="w-full lg:w-2/12 bg-white shadow-lg h-auto lg:h-screen">
     <nav class="flex flex-col space-y-4 p-4">
         <a href="#" class="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">Overview</a>
-        <a href="#" class="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">Manage Users</a>
-        <a href="#" class="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">Manage Roles</a>
+        <a asp-controller="Dashboard" asp-action="GetUsers"
+           class="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">Manage Users</a>
+        <a asp-controller="Dashboard" asp-action="GetRoles"
+           class="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded">Manage Roles</a>
     </nav>
 </aside>
 

@@ -13,4 +13,6 @@ public interface IDashboardService
 
     public Task<PaginatorDto<IEnumerable<UserVm>>> SearchUsersAsync(string searchTerm,
         PaginationFilter paginationFilter);
+
+    Task<PaginatorDto<IEnumerable<RoleVm>>> GetRolesAsync(PaginationFilter paginationFilter);
 }

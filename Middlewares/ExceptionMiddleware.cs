@@ -39,8 +39,7 @@ public class ExceptionMiddleware(
         logger.LogError(ex, ex.Message);
         Console.WriteLine("//////////////////////////////////////////////////////////");
         Console.WriteLine("//////////////////////////////////////////////////////////");
-        Console.WriteLine($"TimeStamp: {DateTime.Now} \n ErrorMessage: {ex.Message}" +
-                          $"\n StackTrace: {ex.StackTrace}");
+        Console.WriteLine($"TimeStamp: {DateTime.Now} \n ErrorMessage: {ex.Message}");
         Console.WriteLine("//////////////////////////////////////////////////////////");
         Console.WriteLine("//////////////////////////////////////////////////////////");
 

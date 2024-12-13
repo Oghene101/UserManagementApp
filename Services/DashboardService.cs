@@ -38,10 +38,6 @@ public class DashboardService(
 
         var manageUserViewModel = new ManageUserViewModel();
         var identityRoles = await GetIdentityRolesAsync(user);
-        // var userRoles = await userManager.GetRolesAsync(user);
-        // var idenitityRoles = (await Task.WhenAll(userRoles.Select(async roleName =>
-        //         await roleManager.FindByNameAsync(roleName))))
-        //     .Where(identityRole => identityRole != null);
 
         manageUserViewModel.UserDetail = new UserVm(user.Id, user.FirstName, user.LastName, user.Email!, user.PhotoUrl,
             identityRoles.ToArray());
@@ -83,6 +79,12 @@ public class DashboardService(
 
         await userManager.DeleteAsync(user);
         return Result.Success();
+    }
+
+    public async Task<PaginatorDto<IEnumerable<RoleVm>>> GetRolesAsync(PaginationFilter paginationFilter)
+    {
+        return await roleManager.Roles.Select(identityRole => new RoleVm(identityRole.Id, identityRole.Name!))
+            .PaginateAsync(paginationFilter);
     }
 
     public async Task<Result> DeleteRoleAsync(string id)
